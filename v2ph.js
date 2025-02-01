@@ -2,7 +2,8 @@
 
 const btn = document.createElement("button");
 const nav = document.querySelectorAll("nav")[1];
-const activePageLink = nav.querySelector("li.page-item.active a.page-link");
+const pageNavElements = Array.from(nav.querySelectorAll("li.page-item"));
+const activeNavElement = pageNavElements.find(pl => pl.classList.contains("active"));
 const photos = document.querySelectorAll("img.album-photo");
 
 btn.type = "button";
@@ -16,7 +17,7 @@ btn.addEventListener('click', () => {
     const datasrc = photos[idx].getAttribute("data-src");
 
     browser.runtime.sendMessage({
-      name: idx + 1 + (activePageLink.innerHTML * 10 - 10),
+      name: idx + 1 + (activeNavElement.firstElementChild.textContent * 10 - 10),
       extension: datasrc.split('.').pop(),
       url: datasrc
     });
