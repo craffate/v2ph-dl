@@ -4,6 +4,8 @@ const btn = document.createElement("button");
 const nav = document.querySelectorAll("nav")[1];
 const pageNavElements = Array.from(nav.querySelectorAll("li.page-item"));
 const activeNavElement = pageNavElements.find(pl => pl.classList.contains("active"));
+const activePageNumber = activeNavElement.firstElementChild.textContent
+const nextNavElement = pageNavElements.find(pl => pl.firstElementChild.textContent === "Next")
 const photos = document.querySelectorAll("img.album-photo");
 
 btn.type = "button";
@@ -17,7 +19,7 @@ btn.addEventListener('click', () => {
     const datasrc = photos[idx].getAttribute("data-src");
 
     browser.runtime.sendMessage({
-      name: idx + 1 + (activeNavElement.firstElementChild.textContent * 10 - 10),
+      name: idx + 1 + (activePageNumber * 10 - 10),
       extension: datasrc.split('.').pop(),
       url: datasrc
     });
@@ -25,4 +27,6 @@ btn.addEventListener('click', () => {
   }
 });
 
-nav.parentNode.appendChild(btn);
+if (activePageNumber === "1") {
+  nav.parentNode.appendChild(btn);
+}
