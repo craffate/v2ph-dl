@@ -8,11 +8,7 @@ const activePageNumber = activeNavElement.firstElementChild.textContent
 const nextNavElement = pageNavElements.find(pl => pl.firstElementChild.textContent === "Next")
 const photos = document.querySelectorAll("img.album-photo");
 
-btn.type = "button";
-btn.textContent = "Download images";
-btn.className = "btn btn-outline-primary btn-block";
-
-btn.addEventListener('click', () => {
+function sendDownloadMessage() {
   let idx = 0;
 
   while (idx < photos.length) {
@@ -21,10 +17,22 @@ btn.addEventListener('click', () => {
     browser.runtime.sendMessage({
       name: idx + 1 + (activePageNumber * 10 - 10),
       extension: datasrc.split('.').pop(),
-      url: datasrc
+      url: datasrc,
+      isLastPage: nextNavElement ? false : true
     });
     idx += 1;
   }
+}
+
+btn.type = "button";
+btn.textContent = "Download images";
+btn.className = "btn btn-outline-primary btn-block";
+
+sendDownloadMessage();
+
+btn.addEventListener('click', () => {
+  browser.runtime.sendMessage(true);
+  sendDownloadMessage();
 });
 
 if (activePageNumber === "1") {
